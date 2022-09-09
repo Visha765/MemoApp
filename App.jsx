@@ -1,23 +1,13 @@
 // import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import AppBar from './src/components/AppBar';
-import MemoList from './src/components/MemoList';
-import CircleButton from './src/components/CircleButton';
+// import { StyleSheet, View } from 'react-native';
+
+// import MemoListScreen from './src/screens/MemoListScreen';
+import MemoDetailScreen from './src/screens/MemoDetailScreen';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <AppBar />
-      <MemoList />
-      <CircleButton>+</CircleButton>
-    </View>
+    // <MemoListScreen />
+    <MemoDetailScreen />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1, // 画面全体
-    backgroundColor: '#F0F4F8',
-  },
-});
