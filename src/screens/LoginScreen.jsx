@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  View, Text, StyleSheet, TextInput, TouchableOpacity,
+  View, Text, StyleSheet, TextInput, TouchableOpacity, Alert,
 } from 'react-native';
+import firebase from 'firebase';
 
 // import AppBar from '../components/AppBar';
 import Button from '../components/Button';
@@ -10,6 +11,34 @@ export default function LoginScreen(props) {
   const { navigation } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    const unSubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MemoList' }],
+        });
+      }
+    });
+    return unSubscribe;
+  }, []);
+
+  function handlePress() {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        const { user } = userCredential;
+        console.log(user.uid);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MemoList' }],
+        });
+      })
+      .catch((error) => {
+        Alert.alert(error.code);
+      }); // コールバック関数
+  }
+
   return (
     <View style={styles.container}>
       {/* <AppBar /> */}
@@ -35,10 +64,7 @@ export default function LoginScreen(props) {
         />
         <Button
           label="submit"
-          onPress={() => navigation.reset({
-            index: 0,
-            routes: [{ name: 'MemoList' }],
-          })}
+          onPress={() => { handlePress(); }}
         />
         <View style={styles.footer}>
           <Text style={styles.footerText}>Not registered?</Text>
