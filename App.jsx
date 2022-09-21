@@ -12,11 +12,13 @@ import MemoCreateScreen from './src/screens/MemoCreateScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
 
-const Stack = createNativeStackNavigator();
+require('firebase/firestore');
 
 if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
