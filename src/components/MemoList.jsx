@@ -1,31 +1,60 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity,
+  View, Text, StyleSheet, TouchableOpacity, Alert, FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
 import { Feather } from '@expo/vector-icons';
+import {
+  shape, string, instanceOf, arrayOf,
+} from 'prop-types';
 
-export default function MemoList() {
+export default function MemoList(props) {
+  const { memos } = props;
   const navigation = useNavigation();
-  return (
-    <TouchableOpacity onPress={() => { navigation.navigate('MemoDetail'); }}>
-      <View style={styles.memoListItem}>
-        <View>
-          <Text style={styles.memoListItemTitle}>買い物リスト</Text>
-          <Text style={styles.memoListItemDate}>2022年9月5日 10:00</Text>
-        </View>
-        <TouchableOpacity
-          style={styles.memoDelete}
-        >
-          <Feather name="x" size={16} color="#B0B0B0" />
-        </TouchableOpacity>
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      // key={item.id}
+      onPress={() => { navigation.navigate('MemoDetail'); }}
+      style={styles.memoListItem}
+    >
+      <View>
+        <Text style={styles.memoListItemTitle}>{item.bodyText}</Text>
+        <Text style={styles.memoListItemDate}>{String(item.updatedAt)}</Text>
       </View>
+      <TouchableOpacity
+        style={styles.memoDelete}
+        onPress={() => { Alert.alert('Are you sure ?'); }}
+      >
+        <Feather name="x" size={16} color="#B0B0B0" />
+      </TouchableOpacity>
     </TouchableOpacity>
+  );
+
+  return (
+    <View style={styles.container}>
+      <FlatList // 画面の表示のみレンダリング
+        data={memos}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id} // 関数リテラルなので引数はなんでもよし
+      />
+    </View>
   );
 }
 
+MemoList.propTypes = {
+  // 配列のprop
+  memos: arrayOf(shape({
+    id: string,
+    bodyText: string,
+    updatedAt: instanceOf(Date),
+  })).isRequired,
+};
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   memoListItem: {
     backgroundColor: '#ffffff',
     flexDirection: 'row',
